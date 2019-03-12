@@ -10,7 +10,7 @@
       />
       <Icon
         type="ios-close-circle"
-        class="icon"
+        class="cascader-icon"
         v-show="isSelectLast"
         @click.native.stop="clearValue"
       />
@@ -22,7 +22,7 @@
     </div>
     <transition name="transition-drop">
       <div
-        class="caspanel-div"
+        class="cascader-caspanel-div"
         v-show="showItem"
       >
         <Caspanel
@@ -80,10 +80,13 @@ export default {
       isSelectLast: "isLast",
       showItem: "showItem",
       classes(state) {
-        return ["cascader-div", { "show-clear": state.isLast }];
+        return ["cascader-div", { "cascader-show-clear": state.isLast }];
       },
       iconClasses(state) {
-        return ["icon", { "icon-transform": !state.showItem }];
+        return [
+          "cascader-icon",
+          { "cascader-icon-transform": !state.showItem }
+        ];
       }
     })
   },
@@ -142,27 +145,27 @@ export default {
 </script>
 
 <style>
-.icon {
+.cascader-icon {
   position: absolute;
   right: 5px;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
 }
-.icon:nth-of-type(1) {
+.cascader-icon:nth-of-type(1) {
   display: none;
   cursor: pointer;
 }
 .cascader-div {
   position: relative;
 }
-.cascader-div:hover .icon:nth-of-type(1) {
+.cascader-div:hover .cascader-icon:nth-of-type(1) {
   display: inline-block;
 }
-.show-clear:hover .icon:nth-of-type(2) {
+.cascader-show-clear:hover .cascader-icon:nth-of-type(2) {
   display: none;
 }
-.caspanel-div {
+.cascader-caspanel-div {
   position: absolute;
   border-radius: 4px;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
@@ -171,7 +174,7 @@ export default {
   left: 3px;
   transform-origin: center top 0px;
 }
-.icon-transform {
+.cascader-icon-transform {
   transform: translateY(-50%) rotate(180deg);
   transform-origin: center center;
 }

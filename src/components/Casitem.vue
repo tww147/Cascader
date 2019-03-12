@@ -26,7 +26,7 @@ export default {
     classes() {
       return [
         "casitem-li",
-        { selected: this.data.value === this.selectedValue }
+        { "casitem-selected": this.data.value === this.selectedValue }
       ];
     }
   },
@@ -47,7 +47,7 @@ export default {
   background-color: #f3f3f3;
   color: #2d8cf0;
 }
-.selected {
+.casitem-selected {
   background-color: #f3f3f3;
   color: #2d8cf0;
 }

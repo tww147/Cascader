@@ -21,7 +21,7 @@
 
 <script>
 import Casitem from "./Casitem";
-
+import { mapState, mapMutations } from "vuex";
 export default {
   name: "Caspanel",
   props: ["data", "index"],
@@ -33,24 +33,37 @@ export default {
   },
   computed: {
     selectedValue() {
-      this.updateSubList();
       return this.$store.state.selectValue[this.currentIndex];
     },
     classes() {
       return ["caspanel-ul", { "caspanel-ul-margin": this.index > 0 }];
-    }
+    },
+    ...mapState({
+      selectedValue(state) {
+        this.updateSubList();
+        return state.selectValue[this.currentIndex];
+      }
+    })
   },
   methods: {
+    ...mapMutations([
+      "open",
+      "close",
+      "clear",
+      "updateSelectValue",
+      "setIsLast",
+      "setSelectValue"
+    ]),
     handleClick(item) {
       if (item.children) {
         this.subList = item.children;
-        this.$store.commit("setIsLast", false);
+        this.setIsLast(false);
       } else {
         this.subList = [];
-        this.$store.commit("setIsLast", true);
-        this.$store.commit("close");
+        this.setIsLast(true);
+        this.close("close");
       }
-      this.$store.commit("updateSelectValue", {
+      this.updateSelectValue({
         index: this.currentIndex,
         value: item.value
       });
@@ -96,8 +109,5 @@ export default {
 }
 .caspanel-ul-margin {
   margin-left: -5px;
-}
-.selected {
-  background-color: blue;
 }
 </style>
