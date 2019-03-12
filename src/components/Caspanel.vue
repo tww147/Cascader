@@ -1,17 +1,19 @@
 <template>
   <span>
-    <ul class="caspanel-ul">
-      <template v-for="(item,index) in currentData">
+    <ul :class="classes">
+      <template v-for="item in data">
         <Casitem
           :data="item"
-          :key="index"
+          :key="item.value"
           @click.native.stop="handleClick(item)"
+          :selectedValue="selectedValue"
         ></Casitem>
       </template>
     </ul>
     <Caspanel
-      v-if="showCaspane"
+      v-if="subList && subList.length"
       :data="subList"
+      :index="currentIndex+1"
     ></Caspanel>
   </span>
 
@@ -22,30 +24,53 @@ import Casitem from "./Casitem";
 
 export default {
   name: "Caspanel",
-  props: ["data"],
+  props: ["data", "index"],
   data() {
     return {
-      showCaspane: false,
-      currentData: this.data,
+      currentIndex: this.index,
       subList: []
     };
   },
   computed: {
-    handleShow() {
-      return this.subList.children;
+    selectedValue() {
+      this.updateSubList();
+      return this.$store.state.selectValue[this.currentIndex];
+    },
+    classes() {
+      return ["caspanel-ul", { "caspanel-ul-margin": this.index > 0 }];
     }
   },
   methods: {
     handleClick(item) {
       if (item.children) {
         this.subList = item.children;
-        this.showCaspane = true;
+        this.$store.commit("setIsLast", false);
       } else {
         this.subList = [];
+        this.$store.commit("setIsLast", true);
+        this.$store.commit("close");
       }
+      this.$store.commit("updateSelectValue", {
+        index: this.currentIndex,
+        value: item.value
+      });
     },
     handleUl() {
       return ["caspanel-ul"];
+    },
+    updateSubList() {
+      this.subList = [];
+      for (let i = 0; i < this.data.length; i++) {
+        if (
+          this.data[i].value ===
+          this.$store.state.selectValue[this.currentIndex]
+        ) {
+          if (this.data[i].children) {
+            this.subList = this.data[i].children;
+            break;
+          }
+        }
+      }
     }
   },
   watch: {
@@ -68,5 +93,11 @@ export default {
   margin: 0;
   padding: 10px 0px;
   box-sizing: border-box;
+}
+.caspanel-ul-margin {
+  margin-left: -5px;
+}
+.selected {
+  background-color: blue;
 }
 </style>

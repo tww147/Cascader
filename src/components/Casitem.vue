@@ -1,5 +1,5 @@
 <template>
-  <li class="casitem-li">
+  <li :class="classes">
     {{currentLable}}
     <Icon
       type="ios-arrow-forward"
@@ -13,7 +13,7 @@
 import { Icon } from "iview";
 
 export default {
-  props: ["data"],
+  props: ["data", "selectedValue"],
   data() {
     return {
       currentLable: this.data.label
@@ -22,6 +22,12 @@ export default {
   computed: {
     hasChildren() {
       return this.data.children ? true : false;
+    },
+    classes() {
+      return [
+        "casitem-li",
+        { selected: this.data.value === this.selectedValue }
+      ];
     }
   },
   components: {
@@ -38,7 +44,12 @@ export default {
   cursor: pointer;
 }
 .casitem-li:hover {
-  background-color: blue;
+  background-color: #f3f3f3;
+  color: #2d8cf0;
+}
+.selected {
+  background-color: #f3f3f3;
+  color: #2d8cf0;
 }
 .casitem-icon {
   position: absolute;
